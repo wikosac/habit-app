@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.setting.SettingsActivity
@@ -42,7 +43,10 @@ class HabitListActivity : AppCompatActivity() {
 
         // Initiate RecyclerView with LayoutManager
         recycler = findViewById(R.id.rv_habit)
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = StaggeredGridLayoutManager(
+            2, // Number of columns in the grid
+            StaggeredGridLayoutManager.VERTICAL
+        )
         habitAdapter = HabitAdapter { habit ->
             // Handle item click here
             val detailIntent = Intent(this, DetailHabitActivity::class.java)

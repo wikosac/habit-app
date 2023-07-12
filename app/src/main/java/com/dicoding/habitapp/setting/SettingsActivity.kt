@@ -24,8 +24,13 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+    private var toastShown = false
+
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        if (!toastShown) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            toastShown = true
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
