@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
+import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.data.HabitRepository
+import com.dicoding.habitapp.utils.Event
 
 class DetailHabitViewModel(private val habitRepository: HabitRepository): ViewModel() {
 
@@ -21,6 +23,10 @@ class DetailHabitViewModel(private val habitRepository: HabitRepository): ViewMo
             return
         }
         _habitId.value = habitId
+    }
+
+    fun deleteHabit(habit: Habit) {
+        habitRepository.deleteHabit(habit)
     }
 
 }

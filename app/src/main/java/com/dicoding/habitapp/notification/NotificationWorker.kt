@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -35,10 +36,12 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
     private fun showNotification() {
         val notificationId = habitId
+        Log.d("testo", "shownotif habitid: $habitId")
 
         val intent = Intent(applicationContext, DetailHabitActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra(HABIT_ID, habitId)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            Log.d("testo", "notif intent habitid: $habitId")
         }
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
