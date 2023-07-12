@@ -42,12 +42,13 @@ class CountDownViewModel : ViewModel() {
 
     fun startTimer() {
         timer?.start()
+        _eventCountDownFinish.value = true
     }
 
     fun resetTimer() {
         timer?.cancel()
         currentTime.value = initialTime.value
-        _eventCountDownFinish.value = true
+        _eventCountDownFinish.value = false
     }
 
     override fun onCleared() {
