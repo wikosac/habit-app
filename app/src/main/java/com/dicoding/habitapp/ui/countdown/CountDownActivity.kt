@@ -1,13 +1,11 @@
 package com.dicoding.habitapp.ui.countdown
 
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.Constraints
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -18,7 +16,6 @@ import com.dicoding.habitapp.notification.NotificationWorker
 import com.dicoding.habitapp.utils.HABIT
 import com.dicoding.habitapp.utils.HABIT_ID
 import com.dicoding.habitapp.utils.HABIT_TITLE
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class CountDownActivity : AppCompatActivity() {
@@ -37,7 +34,7 @@ class CountDownActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this)[CountDownViewModel::class.java]
 
         // Set initial time and observe current time. Update button state when countdown is finished
-        val initialTime = habit.minutesFocus
+        val initialTime = habit.minutesFocus * 60 * 1000
         viewModel.setInitialTime(initialTime)
         viewModel.currentTimeString.observe(this) {
             findViewById<TextView>(R.id.tv_count_down).text = it
@@ -57,13 +54,13 @@ class CountDownActivity : AppCompatActivity() {
             .build()
 
         findViewById<Button>(R.id.btn_start).setOnClickListener {
-            workManager.enqueue(notificationWorkRequest)
             viewModel.startTimer()
+            workManager.enqueue(notificationWorkRequest)
         }
 
         findViewById<Button>(R.id.btn_stop).setOnClickListener {
-            workManager.cancelWorkById(notificationWorkRequest.id)
             viewModel.resetTimer()
+            workManager.cancelWorkById(notificationWorkRequest.id)
         }
     }
 

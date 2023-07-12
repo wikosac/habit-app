@@ -24,11 +24,10 @@ class CountDownViewModel : ViewModel() {
     val eventCountDownFinish: LiveData<Boolean> = _eventCountDownFinish
 
     fun setInitialTime(minuteFocus: Long) {
-        val initialTimeMillis = minuteFocus * 60 * 1000
-        initialTime.value = initialTimeMillis
-        currentTime.value = initialTimeMillis
+        initialTime.value = minuteFocus
+        currentTime.value = minuteFocus
 
-        timer = object : CountDownTimer(initialTimeMillis, 1000) {
+        timer = object : CountDownTimer(minuteFocus, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 currentTime.value = millisUntilFinished
@@ -36,6 +35,7 @@ class CountDownViewModel : ViewModel() {
 
             override fun onFinish() {
                 resetTimer()
+                _eventCountDownFinish.value = false
             }
         }
     }
