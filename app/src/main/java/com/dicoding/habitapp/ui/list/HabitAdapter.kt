@@ -17,8 +17,10 @@ class HabitAdapter(
 
     // Create and initialize ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false)
-        return HabitViewHolder(itemView)
+        return HabitViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.habit_item, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {

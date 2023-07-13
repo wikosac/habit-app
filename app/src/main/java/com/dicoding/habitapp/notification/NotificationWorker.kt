@@ -36,15 +36,16 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
     }
 
     private fun showNotification() {
-        val notificationId = habitId
+        val notifId = habitId
 
         val intent = Intent(applicationContext, DetailHabitActivity::class.java).apply {
             putExtra(HABIT_ID, habitId)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
-            notificationId,
+            notifId,
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -58,7 +59,7 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
             .setAutoCancel(true)
             .build()
 
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notifManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -66,9 +67,9 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
                 NOTIF_UNIQUE_WORK,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
-            notificationManager.createNotificationChannel(channel)
+            notifManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(notificationId, notification)
+        notifManager.notify(notifId, notification)
     }
 }

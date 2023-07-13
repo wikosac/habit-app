@@ -45,16 +45,9 @@ class HabitListActivity : AppCompatActivity() {
         // Initiate RecyclerView with LayoutManager
         recycler = findViewById(R.id.rv_habit)
         recycler.layoutManager = StaggeredGridLayoutManager(
-            2, // Number of columns in the grid
+            2,
             StaggeredGridLayoutManager.VERTICAL
         )
-        habitAdapter = HabitAdapter { habit ->
-            // Handle item click here
-            val detailIntent = Intent(this, DetailHabitActivity::class.java)
-            detailIntent.putExtra(HABIT_ID, habit.id)
-            startActivity(detailIntent)
-        }
-        recycler.adapter = habitAdapter
 
         initAction()
 
@@ -62,6 +55,13 @@ class HabitListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory)[HabitListViewModel::class.java]
 
         // Submit pagedList to adapter and add intent to detail
+        habitAdapter = HabitAdapter { habit ->
+            val detailIntent = Intent(this, DetailHabitActivity::class.java)
+            detailIntent.putExtra(HABIT_ID, habit.id)
+            startActivity(detailIntent)
+        }
+        recycler.adapter = habitAdapter
+
         viewModel.habits.observe(this) { habitAdapter.submitList(it) }
         viewModel.snackbarText.observe(this) { showSnackBar(it) }
         viewModel.filter(HabitSortType.START_TIME)
@@ -87,7 +87,9 @@ class HabitListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_random -> {
-                startActivity(Intent(this, RandomHabitActivity::class.java))
+                startActivity(
+                    Intent(this, RandomHabitActivity::class.java)
+                )
                 true
             }
             R.id.action_filter -> {
@@ -95,8 +97,9 @@ class HabitListActivity : AppCompatActivity() {
                 true
             }
             R.id.action_settings -> {
-                val settingIntent = Intent(this, SettingsActivity::class.java)
-                startActivity(settingIntent)
+                startActivity(
+                    Intent(this, SettingsActivity::class.java)
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)

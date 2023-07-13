@@ -24,13 +24,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-    private var toastShown = false
-
     private fun showToast(message: String) {
-        if (!toastShown) {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            toastShown = true
-        }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +49,8 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             // Update theme based on value in ListPreference
-            val themePreference = findPreference<ListPreference>(getString(R.string.pref_key_dark))
-            themePreference?.setOnPreferenceChangeListener { _, newValue ->
+            val themePref = findPreference<ListPreference>(getString(R.string.pref_key_dark))
+            themePref?.setOnPreferenceChangeListener { _, newValue ->
                 val themeMode = when (newValue) {
                     getString(R.string.pref_dark_off) -> AppCompatDelegate.MODE_NIGHT_NO
                     getString(R.string.pref_dark_on) -> AppCompatDelegate.MODE_NIGHT_YES

@@ -15,12 +15,10 @@ class HabitActivityTest {
     fun testAddHabit() {
         ActivityScenario.launch(HabitListActivity::class.java)
         onView(
-            withId(R.id.fab))
-            .perform(click()
+            withId(R.id.fab)).perform(click()
         )
         onView(
-            withId(R.id.activity_add_habit))
-            .check(matches(isDisplayed())
+            withId(R.id.activity_add_habit)).check(matches(isDisplayed())
         )
     }
 }
