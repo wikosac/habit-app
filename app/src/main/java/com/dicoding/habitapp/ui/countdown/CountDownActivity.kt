@@ -16,6 +16,7 @@ import com.dicoding.habitapp.notification.NotificationWorker
 import com.dicoding.habitapp.utils.HABIT
 import com.dicoding.habitapp.utils.HABIT_ID
 import com.dicoding.habitapp.utils.HABIT_TITLE
+import com.dicoding.habitapp.utils.NOTIF_UNIQUE_WORK
 import java.util.concurrent.TimeUnit
 
 class CountDownActivity : AppCompatActivity() {
@@ -34,30 +35,29 @@ class CountDownActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this)[CountDownViewModel::class.java]
 
         // Set initial time and observe current time. Update button state when countdown is finished
-        val initialTime = habit.minutesFocus * 1000
-        viewModel.setInitialTime(initialTime)
+        viewModel.setInitialTime(habit.minutesFocus)
         viewModel.currentTimeString.observe(this) {
             findViewById<TextView>(R.id.tv_count_down).text = it
         }
-        viewModel.eventCountDownFinish.observe(this) { updateButtonState(it) }
 
         // Start and cancel One Time Request WorkManager to notify when time is up.
-        val workManager = WorkManager.getInstance(applicationContext)
+        val workManager = WorkManager.getInstance(this)
         val data = workDataOf(
             HABIT_ID to habit.id,
             HABIT_TITLE to habit.title
         )
-        Log.d("testo", "onCreate countdownac: ${habit.id}")
-
 
         notificationWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInitialDelay(initialTime, TimeUnit.MILLISECONDS)
             .setInputData(data)
             .build()
 
+        viewModel.eventCountDownFinish.observe(this) {
+            updateButtonState(it)
+            if (it == false) workManager.enqueue(notificationWorkRequest)
+        }
+
         findViewById<Button>(R.id.btn_start).setOnClickListener {
             viewModel.startTimer()
-            workManager.enqueue(notificationWorkRequest)
         }
 
         findViewById<Button>(R.id.btn_stop).setOnClickListener {
