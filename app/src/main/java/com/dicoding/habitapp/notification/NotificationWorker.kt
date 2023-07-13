@@ -3,6 +3,7 @@ package com.dicoding.habitapp.notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -36,26 +37,24 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
     private fun showNotification() {
         val notificationId = habitId
-        Log.d("testo", "shownotif habitid: $habitId")
 
         val intent = Intent(applicationContext, DetailHabitActivity::class.java).apply {
             putExtra(HABIT_ID, habitId)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            Log.d("testo", "notif intent habitid: $habitId")
         }
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
-            0,
+            notificationId,
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications)
-            .setContentTitle("Time's Up!")
+            .setContentTitle(applicationContext.getString(R.string.notify_content))
             .setContentText("Complete your habit: $habitTitle")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .build()
 
@@ -65,7 +64,7 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 NOTIF_UNIQUE_WORK,
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
         }
