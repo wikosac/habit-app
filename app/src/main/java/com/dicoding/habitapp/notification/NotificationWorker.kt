@@ -52,8 +52,8 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications)
-            .setContentTitle(applicationContext.getString(R.string.notify_content))
-            .setContentText("Complete your habit: $habitTitle")
+            .setContentTitle(habitTitle)
+            .setContentText(applicationContext.getString(R.string.notify_content))
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dicoding.habitapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.concurrent.Executors
 
 // Define room database class and prepopulate database using JSON
 @Database(entities = [Habit::class], version = 1)
@@ -32,10 +34,20 @@ abstract class HabitDatabase : RoomDatabase() {
                     context.applicationContext,
                     HabitDatabase::class.java,
                     "habit-database"
-                ).build()
+                ).addCallback(DatabaseCallback(context))
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
-                fillWithStartingData(context, instance.habitDao())
                 instance
+            }
+        }
+
+        private class DatabaseCallback(private val context: Context) : Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                Executors.newSingleThreadExecutor().execute {
+                    fillWithStartingData(context, getInstance(context).habitDao())
+                }
             }
         }
 
